@@ -1,21 +1,18 @@
 import json
-from django.http import JsonResponse
+from django.forms.models import model_to_dict
+from django.http import (
+    JsonResponse, # turn dict to json 
+    HttpResponse, # accept any type of data
+)
+
+from products.models import Product
 
 def api_home(request, *args, **kwargs):
-    # request taken from front end 
-    body = request.body # byte string of json data 
+    product = Product.objects.all().order_by('?').first()
     data = {}
     
-    # possibility that request.body is empty (no JSON data)
-    try: 
-        data = json.loads(body) # convert byte string to json object
-    except: 
-        pass
-    
-    # we can access headers and content type from request object
-    data["params"] = request.GET 
-    data["headers"] = dict(request.headers) # dictionary of headers
-    data["content_type"] = request.content_type # string of content type
+    if product: 
+        data["product"] = model_to_dict(product, fields=['id', 'title'])
+
     print(data)
-    
     return JsonResponse(data)
