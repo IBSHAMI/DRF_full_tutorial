@@ -10,4 +10,7 @@ class ProductSerializer(serializers.ModelSerializer):
     
     # obj is the product object instance called
     def get_price_tax(self, obj):
-        return obj.get_price_plus_vat()
+        try:
+            return obj.get_price_plus_vat()
+        except:
+            None
