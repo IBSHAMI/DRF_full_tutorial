@@ -9,6 +9,6 @@ response = requests.get(
                             json={"data": "Hello World", "status": "200"}
                         )
 
-print(response.text)
+# print(response.text)
 # print(response.status_code)
-# print(response.json())
+print(response.json())
