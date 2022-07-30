@@ -1,8 +1,8 @@
 from rest_framework import authentication, generics, mixins, permissions
 from .models import Product
 from .serializers import ProductSerializer
-from .permissions import IsStaffProductEditPermission
-
+from ..api.permissions import IsStaffProductEditPermission
+from api.authentication import TokenAuthentication
 
 class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
@@ -12,10 +12,6 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
     # the by default the user will not be able to do unsafe methods
     # however, the user will be able to view the list of products (safe method)
     # so we can create a custom permission class to handle it
-    authentication_classes = [
-        authentication.SessionAuthentication,
-        authentication.TokenAuthentication,
-    ]
     permission_classes = [permissions.IsAdminUser, IsStaffProductEditPermission]
 
     def perform_create(self, serializer):
