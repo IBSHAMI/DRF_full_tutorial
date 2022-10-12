@@ -6,7 +6,7 @@ endpoint = "http://127.0.0.1:8000/api/"
 response = requests.post(
                             endpoint,
                             params={"name": "John", "age": "30"},
-                            json={"data": "Hello World", "status": "200"}
+                            json={"title": "trial"}
                         )
 
 print(response.text)

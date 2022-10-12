@@ -16,8 +16,9 @@ from products.serializers import ProductSerializer
 @api_view(['POST'])
 def api_home(request, *args, **kwargs):
     serializer = ProductSerializer(data=request.data)
-    
+    data = {}
     if serializer.is_valid(): 
+        serializer.save()
         print(serializer.data)
         data = serializer.data
     return Response(data)
