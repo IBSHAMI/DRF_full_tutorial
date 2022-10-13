@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, mixins
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
@@ -49,10 +49,17 @@ class ProductUpdateAPIView(generics.UpdateAPIView):
         instance = serializer.save()
 
 
+# delete api view delete an exiting model instance
+class ProductDeleteAPIView(generics.DestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_field = 'pk'
 
-
-
-
+    def perform_destroy(self, instance):
+        # we can add extra logic here
+        # we override the perform_destroy method,
+        # so we can add extra logic
+        super().perform_destroy(instance)
 
 
 # create a function based method for all the api views
@@ -92,3 +99,41 @@ def products_all_views(request, *args, **kwargs):
     if method == 'DELETE':
         # delete view
         pass
+
+
+# create a generic class based method for all the api views
+class ProductGenericAPIView(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    generics.GenericAPIView):
+    # in class based view we use methods instead of if statements
+    # each method take the request and argument and keyword arguments
+    # we will use different methods for different http methods
+
+    # we declare our queryset and serializer class
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_field = 'pk'
+
+    # we use the get method to get a list of objects or detail of an object
+    def get(self, request, *args, **kwargs):
+        # we check if the pk is in the kwargs
+        if 'pk' in kwargs:
+            # if it is we call the retrieve method
+            return self.retrieve(request, *args, **kwargs)
+
+        # I can return a list of objects or a detail of an object
+        # by calling self.list from mixins.ListModelMixin class
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
