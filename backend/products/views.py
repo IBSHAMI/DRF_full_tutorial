@@ -1,27 +1,25 @@
-from rest_framework import generics, mixins
+from rest_framework import generics, mixins, permissions, authentication
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
 from .models import Product
 from .serializers import ProductSerializer
-
-
-# retrieve api view return an exiting model instance
-# similar to DetailView in Django
-class ProductDetailAPIView(generics.RetrieveAPIView):
-    # get data from the database
-    # we can use def get_queryset(self): to filter the data
-    queryset = Product.objects.all()
-
-    # we return a serializer to process the data
-    serializer_class = ProductSerializer
+from .permissions import IsStaffEditor
 
 
 # create api view create a new model instance
 class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    authentication_classes = [authentication.SessionAuthentication]
+    # by default the user will have access to safe methods,
+    # safe methods are GET. If we want pervent the user even from get method
+    # we have to create a custom permission class
+    # order of permission_classes is important
+    # I want to check if user is staff or editor
+    # then I want to check if user has permission to add or change or delete
+    permission_classes = [permissions.IsAdminUser, IsStaffEditor]
 
     def perform_create(self, serializer):
         # we can add extra logic here
@@ -34,6 +32,17 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
             content = title
 
         serializer.save(content=content)
+
+# retrieve api view return an exiting model instance
+# similar to DetailView in Django
+class ProductDetailAPIView(generics.RetrieveAPIView):
+    # get data from the database
+    # we can use def get_queryset(self): to filter the data
+    queryset = Product.objects.all()
+
+    # we return a serializer to process the data
+    serializer_class = ProductSerializer
+
 
 
 # update api view update an exiting model instance
