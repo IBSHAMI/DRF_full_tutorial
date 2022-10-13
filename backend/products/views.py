@@ -15,5 +15,7 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
     serializer_class = ProductSerializer
 
 
-    # lookup_field = 'id'
-    # lookup_url_kwarg = 'product_id'
+# create api view create a new model instance
+class ProductCreateAPIView(generics.CreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
