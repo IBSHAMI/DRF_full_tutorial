@@ -12,7 +12,7 @@ from .permissions import IsStaffEditor
 class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    authentication_classes = [authentication.SessionAuthentication]
+    authentication_classes = [authentication.TokenAuthentication, authentication.SessionAuthentication]
     # by default the user will have access to safe methods,
     # safe methods are GET. If we want pervent the user even from get method
     # we have to create a custom permission class
