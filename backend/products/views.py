@@ -16,6 +16,25 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
 
 
 # create api view create a new model instance
-class ProductCreateAPIView(generics.CreateAPIView):
+class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+    def perform_create(self, serializer):
+        # we can add extra logic here
+        # we override the perform_create method,
+        # so we can add extra logic
+        title = serializer.validated_data.get('title')
+        content = serializer.validated_data.get('content')
+
+        if content is None:
+            content = title
+
+        serializer.save(content=content)
+
+
+# # list api view return a list of model instances
+# class ProductListAPIView(generics.ListAPIView):
+#     queryset = Product.objects.all()
+#     serializer_class = ProductSerializer
+
