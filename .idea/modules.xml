@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/DRF-full tutorial.iml" filepath="$PROJECT_DIR$/.idea/DRF-full tutorial.iml" />
+      <module fileurl="file://$PROJECT_DIR$/py_client/.idea/py_client.iml" filepath="$PROJECT_DIR$/py_client/.idea/py_client.iml" />
     </modules>
   </component>
 </project>
