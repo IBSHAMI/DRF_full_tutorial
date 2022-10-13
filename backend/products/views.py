@@ -1,3 +1,19 @@
-from django.shortcuts import render
+from rest_framework import generics
 
-# Create your views here.
+from .models import Product
+from .serializers import ProductSerializer
+
+
+# retrieve api view return an exiting model instance
+# similar to DetailView in Django
+class ProductDetailAPIView(generics.RetrieveAPIView):
+    # get data from the database
+    # we can use def get_queryset(self): to filter the data
+    queryset = Product.objects.all()
+
+    # we return a serializer to process the data
+    serializer_class = ProductSerializer
+
+
+    # lookup_field = 'id'
+    # lookup_url_kwarg = 'product_id'
