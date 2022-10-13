@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
+from api.authentication import TokenAuthentication
 from .models import Product
 from .serializers import ProductSerializer
 from .permissions import IsStaffEditor
@@ -12,7 +13,7 @@ from .permissions import IsStaffEditor
 class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    authentication_classes = [authentication.TokenAuthentication, authentication.SessionAuthentication]
+    authentication_classes = [TokenAuthentication, authentication.SessionAuthentication]
     # by default the user will have access to safe methods,
     # safe methods are GET. If we want pervent the user even from get method
     # we have to create a custom permission class

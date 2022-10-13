@@ -21,7 +21,7 @@ if auth_response.status_code == 200:
     if token is not None:
         # make a request with the token
         auth_headers = {
-            'Authorization': 'Token ' + token
+            'Authorization': 'Bearer ' + token
         }
         endpoint = "http://127.0.0.1:8000/api/products/"
         # get request
