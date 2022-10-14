@@ -1,16 +1,15 @@
-from rest_framework import generics, mixins, permissions, authentication
+from rest_framework import generics, mixins
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
-from api.authentication import TokenAuthentication
 from .models import Product
 from .serializers import ProductSerializer
-from .permissions import IsStaffEditor
+from api.mixins import StaffEditorMixin
 
 
 # create api view create a new model instance
-class ProductListCreateAPIView(generics.ListCreateAPIView):
+class ProductListCreateAPIView(StaffEditorMixin, generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
@@ -23,7 +22,7 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
     # order of permission_classes is important
     # I want to check if user is staff or editor
     # then I want to check if user has permission to add or change or delete
-    permission_classes = [permissions.IsAdminUser, IsStaffEditor]
+    # permission_classes = [permissions.IsAdminUser, IsStaffEditor]
 
     def perform_create(self, serializer):
         # we can add extra logic here
@@ -40,22 +39,20 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
 
 # retrieve api view return an exiting model instance
 # similar to DetailView in Django
-class ProductDetailAPIView(generics.RetrieveAPIView):
+class ProductDetailAPIView(StaffEditorMixin, generics.RetrieveAPIView):
     # get data from the database
     # we can use def get_queryset(self): to filter the data
     queryset = Product.objects.all()
 
     # we return a serializer to process the data
     serializer_class = ProductSerializer
-    permission_classes = [permissions.IsAdminUser, IsStaffEditor]
 
 
 # update api view update an exiting model instance
-class ProductUpdateAPIView(generics.UpdateAPIView):
+class ProductUpdateAPIView(StaffEditorMixin, generics.UpdateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'pk'
-    permission_classes = [permissions.IsAdminUser, IsStaffEditor]
 
     def perform_update(self, serializer):
         # we can add extra logic here
@@ -65,11 +62,10 @@ class ProductUpdateAPIView(generics.UpdateAPIView):
 
 
 # delete api view delete an exiting model instance
-class ProductDeleteAPIView(generics.DestroyAPIView):
+class ProductDeleteAPIView(StaffEditorMixin, generics.DestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'pk'
-    permission_classes = [permissions.IsAdminUser, IsStaffEditor]
 
     def perform_destroy(self, instance):
         # we can add extra logic here

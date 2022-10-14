@@ -12,6 +12,11 @@ class IsStaffEditor(permissions.DjangoModelPermissions):
         'DELETE': ['%(app_label)s.delete_%(model_name)s'],
     }
 
+
+
+
+
+
     # def has_permission(self, request, view):
     #     user = request.user
     #     print(user.get_all_permissions())
@@ -39,6 +44,6 @@ class IsStaffEditor(permissions.DjangoModelPermissions):
     #         return False
     #     return False
 
-    # check for permissions with access to the obj
-    def has_object_permission(self, request, view, obj):
-        pass
+    # # check for permissions with access to the obj
+    # def has_object_permission(self, request, view, obj):
+    #     pass
