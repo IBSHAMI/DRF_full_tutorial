@@ -13,7 +13,10 @@ from .permissions import IsStaffEditor
 class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    authentication_classes = [TokenAuthentication, authentication.SessionAuthentication]
+
+    # The authentication_classes below is similar to default authentication classes in settings.py
+    # authentication_classes = [TokenAuthentication, authentication.SessionAuthentication]
+
     # by default the user will have access to safe methods,
     # safe methods are GET. If we want pervent the user even from get method
     # we have to create a custom permission class
@@ -34,6 +37,7 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
 
         serializer.save(content=content)
 
+
 # retrieve api view return an exiting model instance
 # similar to DetailView in Django
 class ProductDetailAPIView(generics.RetrieveAPIView):
@@ -43,7 +47,7 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
 
     # we return a serializer to process the data
     serializer_class = ProductSerializer
-
+    permission_classes = [permissions.IsAdminUser, IsStaffEditor]
 
 
 # update api view update an exiting model instance
@@ -51,6 +55,7 @@ class ProductUpdateAPIView(generics.UpdateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'pk'
+    permission_classes = [permissions.IsAdminUser, IsStaffEditor]
 
     def perform_update(self, serializer):
         # we can add extra logic here
@@ -64,6 +69,7 @@ class ProductDeleteAPIView(generics.DestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'pk'
+    permission_classes = [permissions.IsAdminUser, IsStaffEditor]
 
     def perform_destroy(self, instance):
         # we can add extra logic here
