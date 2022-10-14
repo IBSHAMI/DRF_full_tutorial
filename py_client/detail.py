@@ -1,9 +1,8 @@
-import requests 
+import requests
 
-# endpoint = "https://httpbin.org/anything"
-endpoint = "http://127.0.0.1:8000/api/"
+endpoint = "http://127.0.0.1:8000/api/products/15/"
 
-response = requests.post(
+response = requests.get(
                             endpoint,
                             params={"name": "John", "age": "30"},
                             json={"content": "trial"}

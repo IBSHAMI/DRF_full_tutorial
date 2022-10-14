@@ -1,25 +1,31 @@
 import requests
-from getpass import getpass
+import getpass
 
-# get auth token
-auth_endpoint = 'http://localhost:8000/api/auth/'
-password = getpass()
 
-auth_response = requests.post(auth_endpoint, json={
+endpoint = "http://127.0.0.1:8000/api/auth/"
+password = getpass.getpass()
+
+auth_response = requests.post(endpoint, json={
     "username": "staff",
     "password": password
-}
-)
+})
 
+# return back the data from the response
+# will include the token for the user
 print(auth_response.json())
 
+
+# after we get the token we can use it to make requests
 if auth_response.status_code == 200:
-    token = auth_response.json()['token']
-    endpoint = "http://127.0.0.1:8000/api/products/"
-    headers = {
-        "Authorization": "Bearer " + token,
-    }
+    token = auth_response.json().get('token')
+    if token is not None:
+        # make a request with the token
+        auth_headers = {
+            'Authorization': 'Bearer ' + token
+        }
+        endpoint = "http://127.0.0.1:8000/api/products/"
+        # get request
+        response = requests.get(endpoint, headers=auth_headers)
 
-    response = requests.get(endpoint, headers=headers)
+        print(response.text)
 
-    print(response.json())

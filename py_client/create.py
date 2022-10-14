@@ -2,11 +2,12 @@ import requests
 
 endpoint = "http://127.0.0.1:8000/api/products/"
 
-data = {
-    "title": "Hello first try",
-    "price": "100",
-}
+response = requests.post(
+                            endpoint,
+                            params={"name": "John", "age": "30"},
+                            json={"title": "new tutorial"}
+                        )
 
-response = requests.post(endpoint, json=data)
-
-print(response.json())
+print(response.text)
+# print(response.status_code)
+# print(response.json())

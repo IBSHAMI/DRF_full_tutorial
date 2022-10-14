@@ -1,12 +1,15 @@
 import requests
 
-endpoint = "http://127.0.0.1:8000/api/products/product_update/4/"
+endpoint = "http://127.0.0.1:8000/api/products/update/10/"
 
 data = {
-    "title": "Hello World update",
-    "price": 600
+    'title': 'New title',
+    'content': 'New content',
+    'price': 19,
 }
 
 response = requests.put(endpoint, json=data)
 
-print(response.json())
+print(response.text)
+# print(response.status_code)
+# print(response.json())

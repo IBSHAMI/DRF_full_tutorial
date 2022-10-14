@@ -1,5 +1,8 @@
 from rest_framework import permissions
-from .permissions import IsStaffProductEditPermission
 
-class StaffEditorPermissionMixin(): 
-    permission_classes = [permissions.IsAdminUser, IsStaffProductEditPermission]
+from .permissions import IsStaffEditor
+
+
+# I can now use this custom mixin in any view
+class StaffEditorMixin(object):
+    permission_classes = [permissions.IsAdminUser, IsStaffEditor]
