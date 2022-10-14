@@ -2,11 +2,14 @@ from rest_framework import serializers
 from rest_framework.reverse import reverse
 
 from .models import Product
+from api.serializers import UserProductSerializer
 from .validators import validate_title_contains_number, unique_product_validator
 
 
 class ProductSerializer(serializers.ModelSerializer):
     # change the name of the field
+    user = UserProductSerializer(read_only=True)
+    user_data = serializers.SerializerMethodField(read_only=True)
     discount = serializers.SerializerMethodField(read_only=True)
     update_url = serializers.SerializerMethodField(read_only=True)
     url = serializers.HyperlinkedIdentityField(
@@ -25,6 +28,7 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = [
+            'user',
             'pk',
             'title',
             'content',
@@ -33,6 +37,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'discount',
             'update_url',
             'url',
+            'user_data',
             # 'email',
         ]
 
@@ -44,6 +49,10 @@ class ProductSerializer(serializers.ModelSerializer):
     #
     #     return obj
 
+    def get_user_data(self, obj):
+        return {
+            'username': obj.user.username,
+        }
     def get_update_url(self, obj):
         # We have to access the request from self.context
         # This is because sometimes we might not have access to the request
@@ -67,10 +76,18 @@ class ProductSerializer(serializers.ModelSerializer):
 class ProductDetailSerializer(serializers.ModelSerializer):
     # change the name of the field
     discount = serializers.SerializerMethodField(read_only=True)
+    # Create an email field, drf will try to create a field with the name email
+    # So we need to overwrite the create method
+    # email = serializers.EmailField(write_only=True)
+    title = serializers.CharField(validators=[
+        validate_title_contains_number,
+        unique_product_validator
+    ])
 
     class Meta:
         model = Product
         fields = [
+            # 'user',
             'pk',
             'title',
             'content',

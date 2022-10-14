@@ -10,7 +10,6 @@ from api.mixins import StaffEditorMixin
 
 # create api view create a new model instance
 class ProductListCreateAPIView(StaffEditorMixin, generics.ListCreateAPIView):
-    queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
     # The authentication_classes below is similar to default authentication classes in settings.py
@@ -30,11 +29,20 @@ class ProductListCreateAPIView(StaffEditorMixin, generics.ListCreateAPIView):
         # so we can add extra logic
         title = serializer.validated_data.get('title')
         content = serializer.validated_data.get('content')
+        user = self.request.user
 
         if content is None:
             content = title
 
-        serializer.save(content=content)
+        serializer.save(user=user, content=content)
+
+    # filter data by user
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Product.objects.filter(user=user)
+        return queryset
+
+
 
 
 # retrieve api view return an exiting model instance
