@@ -9,6 +9,8 @@ class Product(models.Model):
     title = models.CharField(max_length=120)
     content = models.TextField(blank=True, null=True)
     price = models.PositiveIntegerField(default=19)
+    # Check if product is available for public to view
+    public = models.BooleanField(default=True)
 
     @property
     def discount_price(self):
