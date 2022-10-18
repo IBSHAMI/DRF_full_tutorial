@@ -36,6 +36,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # third party api
+    'algoliasearch_django',
+
     # third party apps
     'rest_framework',
     'rest_framework.authtoken',
@@ -137,3 +140,11 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticatedOrReadOnly", # Read only for non-authenticated users (GET requests)
     ]
 }
+
+# algolia settings
+ALGOLIA = {
+    'APPLICATION_ID': 'ZYS85FBDX9',
+    'API_KEY': 'd49251d09e6b0329e3335a391820abda',
+    'INDEX_NAME': 'cfe',
+}
+

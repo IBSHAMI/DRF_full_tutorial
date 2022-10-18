@@ -1,8 +1,11 @@
+import random
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
 
 user = settings.AUTH_USER_MODEL
+
+TAGS_VALUE = ['new', 'sale', 'bestseller', 'trending']
 
 
 # to implement a custom qureyset we need to create a class that inherits from models.QuerySet
@@ -38,6 +41,13 @@ class Product(models.Model):
     public = models.BooleanField(default=True)
 
     objects = ProductManager()
+
+    def is_public(self):
+        return self.public
+
+    def get_tag(self):
+        tag = [random.choice(TAGS_VALUE)]
+        return tag
 
     @property
     def discount_price(self):
